@@ -2,7 +2,7 @@ from blessed import Terminal
 from pathlib import Path
 import json
 
-class chessPiece:
+class ChessPiece:
 
     def __init__(self, player, type, firstMove = False):
         self.player = player
@@ -11,66 +11,66 @@ class chessPiece:
         # whether the piece has ever been moved (used for pawns)
         self.firstMove = firstMove
     
-class board:
+class Board:
     
     def __init__(self):
         # list comprehension that creates a list of lists to make a 2d board
-        self.boardArray = [ [chessPiece(0, "space") for _ in range(8) ] for _ in range(8)]
+        self.board_array = [ [ChessPiece(0, "space") for _ in range(8) ] for _ in range(8)]
 
         self.populate()
 
     # sets up the chess pieces on the board
     def populate(self):
         for i in range(8):
-            self.boardArray[i][1] = chessPiece(1, "pawn")
-            self.boardArray[i][6] = chessPiece(2, "pawn")
+            self.board_array[i][1] = ChessPiece(1, "pawn")
+            self.board_array[i][6] = ChessPiece(2, "pawn")
 
-        self.boardArray[0][0] = chessPiece(1, "rook")
-        self.boardArray[7][0] = chessPiece(1, "rook")
-        self.boardArray[0][7] = chessPiece(2, "rook")
-        self.boardArray[7][7] = chessPiece(2, "rook")
+        self.board_array[0][0] = ChessPiece(1, "rook")
+        self.board_array[7][0] = ChessPiece(1, "rook")
+        self.board_array[0][7] = ChessPiece(2, "rook")
+        self.board_array[7][7] = ChessPiece(2, "rook")
 
-        self.boardArray[1][0] = chessPiece(1, "knight")
-        self.boardArray[6][0] = chessPiece(1, "knight")
-        self.boardArray[1][7] = chessPiece(2, "knight")
-        self.boardArray[6][7] = chessPiece(2, "knight")
+        self.board_array[1][0] = ChessPiece(1, "knight")
+        self.board_array[6][0] = ChessPiece(1, "knight")
+        self.board_array[1][7] = ChessPiece(2, "knight")
+        self.board_array[6][7] = ChessPiece(2, "knight")
 
-        self.boardArray[2][0] = chessPiece(1, "bishop")
-        self.boardArray[5][0] = chessPiece(1, "bishop")
-        self.boardArray[2][7] = chessPiece(2, "bishop")
-        self.boardArray[5][7] = chessPiece(2, "bishop")
+        self.board_array[2][0] = ChessPiece(1, "bishop")
+        self.board_array[5][0] = ChessPiece(1, "bishop")
+        self.board_array[2][7] = ChessPiece(2, "bishop")
+        self.board_array[5][7] = ChessPiece(2, "bishop")
 
-        self.boardArray[3][0] = chessPiece(1, "queen")
-        self.boardArray[3][7] = chessPiece(2, "queen")
+        self.board_array[3][0] = ChessPiece(1, "queen")
+        self.board_array[3][7] = ChessPiece(2, "queen")
 
         # king
-        self.boardArray[4][0] = chessPiece(1, "x")
-        self.boardArray[4][7] = chessPiece(2, "x")
+        self.board_array[4][0] = ChessPiece(1, "x")
+        self.board_array[4][7] = ChessPiece(2, "x")
 
     # print out the current state of the board
-    def showBoard(self):
+    def show_board(self):
         print("   a  b  c  d  e  f  g  h\n")
-        for y in reversed(range(len(self.boardArray))):
+        for y in reversed(range(len(self.board_array))):
             print(y + 1, end='  ')
-            for x in range(len(self.boardArray[y])):
-                if self.boardArray[x][y].player == 1:
-                    print(self.boardArray[x][y].type.upper()[0], end='  ')
+            for x in range(len(self.board_array[y])):
+                if self.board_array[x][y].player == 1:
+                    print(self.board_array[x][y].type.upper()[0], end='  ')
                 else:
-                    print(self.boardArray[x][y].type.lower()[0], end='  ')
+                    print(self.board_array[x][y].type.lower()[0], end='  ')
             print(y + 1, end='')
             print("\n")
         print("   a  b  c  d  e  f  g  h")
 
-    def movePiece(self, startLocation, endLocation, player):
+    def move_piece(self, start_location, end_location, player):
         # if there is a piece at the start location that belongs to the player
-        if self.boardArray[int(startLocation[0])][int(startLocation[1])].player == player:
+        if self.board_array[int(start_location[0])][int(start_location[1])].player == player:
             print("You have a piece here")
         else:
             print("You don't have a piece here")
             return
 
-        self.boardArray[int(endLocation[0])][int(endLocation[1])] = self.boardArray[int(startLocation[0])][int(startLocation[1])]
-        self.boardArray[int(startLocation[0])][int(startLocation[1])] = chessPiece(0, "space")
+        self.board_array[int(end_location[0])][int(end_location[1])] = self.board_array[int(start_location[0])][int(start_location[1])]
+        self.board_array[int(start_location[0])][int(start_location[1])] = ChessPiece(0, "space")
 
 
 def convertPositionToIndex(position):
@@ -81,68 +81,68 @@ def convertPositionToIndex(position):
 
 
 # converts a move command to two board array indices
-def parseMove(inputMove):
-    return [convertPositionToIndex(pos) for pos in inputMove.split(" to ")]
+def parseMove(input_move):
+    return [convertPositionToIndex(pos) for pos in input_move.split(" to ")]
 
 def main():
     # blessed terminal
     term = Terminal()
 
-    myPath = Path.cwd() / "danielb-project0"
+    my_path = Path.cwd() / "danielb-project0"
 
-    moveHistory = []
-    saveDictionary = {}
+    move_history = []
+    save_dictionary = {}
 
-    whoseTurn = 1
+    whose_turn = 1
 
-    myBoard = board()
+    my_board = Board()
 
     print("Welcome to Chess\n")
     option = input("Enter 1 to start new game, Enter 2 to load a saved game\n")
 
     # load a game
     if option == "2":
-        with open(myPath / "saved_game.json") as infile:
-            saveDictionary = json.load(infile)
-        moveHistory = saveDictionary["moveHistory"]
-        for i in moveHistory:
-            parsedMoves = parseMove(i)
-            myBoard.movePiece(parsedMoves[0], parsedMoves[1], whoseTurn)
+        with open(my_path / "saved_game.json") as infile:
+            save_dictionary = json.load(infile)
+        move_history = save_dictionary["moveHistory"]
+        for i in move_history:
+            parsed_moves = parseMove(i)
+            my_board.move_piece(parsed_moves[0], parsed_moves[1], whose_turn)
             # update whose turn it is
-            if whoseTurn == 1:
-                whoseTurn = 2
+            if whose_turn == 1:
+                whose_turn = 2
             else:
-                whoseTurn = 1
+                whose_turn = 1
 
 
-    myBoard.showBoard()
+    my_board.show_board()
 
     while True:
-        print("\nIt is player " + str(whoseTurn) + "'s turn")
-        inputMove = input("Enter your move. (Example: a1 to a3) Or enter option for options\n")
-        if inputMove == "option":
+        print("\nIt is player " + str(whose_turn) + "'s turn")
+        input_move = input("Enter your move. (Example: a1 to a3) Or enter option for options\n")
+        if input_move == "option":
             option = input("Enter an option: history, save\n")
             if option == "history":
-                for i in moveHistory:
+                for i in move_history:
                     print(i)
             if option == "save":
-                saveDictionary = {}
-                saveDictionary["moveHistory"] = moveHistory
-                with open(myPath / "saved_game.json", "w") as outfile:
-                    json.dump(saveDictionary, outfile, indent=4)
+                save_dictionary = {}
+                save_dictionary["moveHistory"] = move_history
+                with open(my_path / "saved_game.json", "w") as outfile:
+                    json.dump(save_dictionary, outfile, indent=4)
             continue
 
-        parsedMoves = parseMove(inputMove)
-        moveHistory.append(inputMove)
+        parsed_moves = parseMove(input_move)
+        move_history.append(input_move)
 
-        myBoard.movePiece(parsedMoves[0], parsedMoves[1], whoseTurn)
-        myBoard.showBoard()
+        my_board.move_piece(parsed_moves[0], parsed_moves[1], whose_turn)
+        my_board.show_board()
 
         # update whose turn it is
-        if whoseTurn == 1:
-            whoseTurn = 2
+        if whose_turn == 1:
+            whose_turn = 2
         else:
-            whoseTurn = 1
+            whose_turn = 1
 
 
     pass
