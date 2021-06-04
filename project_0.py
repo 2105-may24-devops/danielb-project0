@@ -4,12 +4,12 @@ import json
 
 class ChessPiece:
 
-    def __init__(self, player, type, firstMove = False):
+    def __init__(self, player, type, first_move = False):
         self.player = player
         self.type = type
 
         # whether the piece has ever been moved (used for pawns)
-        self.firstMove = firstMove
+        self.first_move = first_move
     
 class Board:
     
@@ -73,7 +73,7 @@ class Board:
         self.board_array[int(start_location[0])][int(start_location[1])] = ChessPiece(0, "space")
 
 
-def convertPositionToIndex(position):
+def convert_position_to_index(position):
     letter_to_index = {letter: num for letter, num in zip('abcdefgh', range(8))}
     # raise Exception("Invalid position")
     index = str(letter_to_index[position[0]]) + str((int(position[1]) - 1))
@@ -81,8 +81,8 @@ def convertPositionToIndex(position):
 
 
 # converts a move command to two board array indices
-def parseMove(input_move):
-    return [convertPositionToIndex(pos) for pos in input_move.split(" to ")]
+def parse_move(inputMove):
+    return [convert_position_to_index(pos) for pos in inputMove.split(" to ")]
 
 def main():
     # blessed terminal
