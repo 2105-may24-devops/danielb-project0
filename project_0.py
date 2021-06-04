@@ -74,49 +74,21 @@ class board:
 
 
 def convertPositionToIndex(position):
-    # letter_to_index = {"a": 0, "b": 1, }
     letter_to_index = {letter: num for letter, num in zip('abcdefgh', range(8))}
-    # 'abcdefgh'.find(position[0])
-    if position[0] == "a":
-        index = 0
-    elif position[0] == "b":
-        index = 1
-    elif position[0] == "c":
-        index = 2
-    elif position[0] == "d":
-        index = 3
-    elif position[0] == "e":
-        index = 4
-    elif position[0] == "f":
-        index = 5
-    elif position[0] == "g":
-        index = 6
-    elif position[0] == "h":
-        index = 7
-    else:
-        raise Exception("Invalid position")
-
-    index = str(index) + str((int(position[1]) - 1))
-
+    # raise Exception("Invalid position")
+    index = str(letter_to_index[position[0]]) + str((int(position[1]) - 1))
     return index
+
 
 # converts a move command to two board array indices
 def parseMove(inputMove):
-    # index1 = convertPositionToIndex(inputMove.split(" to ")[0])
-    # index2 = convertPositionToIndex(inputMove.split(" to ")[1])
-    # return [index1, index2]
-    # moves = inputMove.split(" to ")
-    # index1 = convertPositionToIndex(moves[0])
-    # index2 = convertPositionToIndex(moves[1])
-    # return [index1, index2]
-    # return list(map(convertPositionToIndex, inputMove.split(" to ")))
-    # return [convertPositionToIndex(pos) for pos in inputMove.split(" to ")]
+    return [convertPositionToIndex(pos) for pos in inputMove.split(" to ")]
 
 def main():
     # blessed terminal
     term = Terminal()
 
-    myPath = Path.cwd() / "project_0"
+    myPath = Path.cwd() / "danielb-project0"
 
     moveHistory = []
     saveDictionary = {}
