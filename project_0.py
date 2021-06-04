@@ -90,8 +90,8 @@ def main():
 
     my_path = Path.cwd() / "danielb-project0"
 
-    moveHistory = []
-    saveDictionary = {}
+    move_history = []
+    save_dictionary = {}
 
     whose_turn = 1
 
@@ -103,10 +103,10 @@ def main():
     # load a game
     if option == "2":
         with open(my_path / "saved_game.json") as infile:
-            saveDictionary = json.load(infile)
-        moveHistory = saveDictionary["moveHistory"]
-        for i in moveHistory:
-            parsed_moves = parse_move(i)
+            save_dictionary = json.load(infile)
+        move_history = save_dictionary["moveHistory"]
+        for i in move_history:
+            parsed_moves = parseMove(i)
             my_board.move_piece(parsed_moves[0], parsed_moves[1], whose_turn)
             # update whose turn it is
             if whose_turn == 1:
@@ -119,21 +119,21 @@ def main():
 
     while True:
         print("\nIt is player " + str(whose_turn) + "'s turn")
-        inputMove = input("Enter your move. (Example: a1 to a3) Or enter option for options\n")
-        if inputMove == "option":
+        input_move = input("Enter your move. (Example: a1 to a3) Or enter option for options\n")
+        if input_move == "option":
             option = input("Enter an option: history, save\n")
             if option == "history":
-                for i in moveHistory:
+                for i in move_history:
                     print(i)
             if option == "save":
-                saveDictionary = {}
-                saveDictionary["moveHistory"] = moveHistory
+                save_dictionary = {}
+                save_dictionary["moveHistory"] = move_history
                 with open(my_path / "saved_game.json", "w") as outfile:
-                    json.dump(saveDictionary, outfile, indent=4)
+                    json.dump(save_dictionary, outfile, indent=4)
             continue
 
-        parsed_moves = parse_move(inputMove)
-        moveHistory.append(inputMove)
+        parsed_moves = parseMove(input_move)
+        move_history.append(input_move)
 
         my_board.move_piece(parsed_moves[0], parsed_moves[1], whose_turn)
         my_board.show_board()
