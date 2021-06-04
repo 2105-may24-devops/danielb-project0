@@ -81,14 +81,15 @@ def convert_position_to_index(position):
 
 
 # converts a move command to two board array indices
-def parse_move(inputMove):
-    return [convert_position_to_index(pos) for pos in inputMove.split(" to ")]
+def parse_move(input_move):
+    return [convert_position_to_index(pos) for pos in input_move.split(" to ")]
 
 def main():
     # blessed terminal
     term = Terminal()
 
-    my_path = Path.cwd() / "danielb-project0"
+    #my_path = Path.cwd() / "danielb-project0"
+    my_path = Path.cwd()
 
     move_history = []
     save_dictionary = {}
@@ -106,7 +107,7 @@ def main():
             save_dictionary = json.load(infile)
         move_history = save_dictionary["moveHistory"]
         for i in move_history:
-            parsed_moves = parseMove(i)
+            parsed_moves = parse_move(i)
             my_board.move_piece(parsed_moves[0], parsed_moves[1], whose_turn)
             # update whose turn it is
             if whose_turn == 1:
@@ -132,7 +133,7 @@ def main():
                     json.dump(save_dictionary, outfile, indent=4)
             continue
 
-        parsed_moves = parseMove(input_move)
+        parsed_moves = parse_move(input_move)
         move_history.append(input_move)
 
         my_board.move_piece(parsed_moves[0], parsed_moves[1], whose_turn)
