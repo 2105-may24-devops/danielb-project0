@@ -69,6 +69,10 @@ class Board:
             print("You don't have a piece here")
             return
 
+        if self.board_array[int(start_location[0])][int(start_location[1])].first_move == False:
+            print("first move")
+            self.board_array[int(start_location[0])][int(start_location[1])].first_move = True
+
         self.board_array[int(end_location[0])][int(end_location[1])] = self.board_array[int(start_location[0])][int(start_location[1])]
         self.board_array[int(start_location[0])][int(start_location[1])] = ChessPiece(0, "space")
 
