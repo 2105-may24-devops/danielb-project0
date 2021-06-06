@@ -88,12 +88,27 @@ def convert_position_to_index(position):
 def parse_move(input_move):
     return [convert_position_to_index(pos) for pos in input_move.split(" to ")]
 
+# returns valid move positions for a given chess piece
+def find_valid_moves(chess_piece, board, start_position):
+    valid_moves = []
+    if chess_piece.type == "pawn":
+        # if the pawn has never been moved before
+        if chess_piece.first_move == False:
+            if int(start_position[1]) + 2 < 8:
+                valid_moves.append((str(start_position[0]) + str(int(start_position[1]) + 2)))
+
+        if int(start_position[1]) + 1 < 8:
+            valid_moves.append((str(start_position[0]) + str(int(start_position[1]) + 1)))
+    return valid_moves
+
+
+
 def main():
     # blessed terminal
     term = Terminal()
 
-    #my_path = Path.cwd() / "danielb-project0"
-    my_path = Path.cwd()
+    my_path = Path.cwd() / "danielb-project0"
+    #my_path = Path.cwd()
 
     move_history = []
     save_dictionary = {}
@@ -138,6 +153,9 @@ def main():
             continue
 
         parsed_moves = parse_move(input_move)
+
+        print(find_valid_moves(my_board.board_array[int(parsed_moves[0][0])][int(parsed_moves[0][1])], my_board, parsed_moves[0]))
+
         move_history.append(input_move)
 
         my_board.move_piece(parsed_moves[0], parsed_moves[1], whose_turn)
