@@ -107,8 +107,10 @@ def main():
     # blessed terminal
     term = Terminal()
 
-    my_path = Path.cwd() / "danielb-project0"
-    #my_path = Path.cwd()
+    #my_path = Path.cwd() / "danielb-project0"
+    my_path = Path.home() / "danielb-project0"
+    #if my_path / "danielb-project0".exists():
+    #    my_path = Path.cwd() / "danielb-project0"
 
     move_history = []
     save_dictionary = {}
