@@ -92,13 +92,42 @@ def parse_move(input_move):
 def find_valid_moves(chess_piece, board, start_position):
     valid_moves = []
     if chess_piece.type == "pawn":
-        # if the pawn has never been moved before
-        if chess_piece.first_move == False:
-            if int(start_position[1]) + 2 < 8:
-                valid_moves.append((str(start_position[0]) + str(int(start_position[1]) + 2)))
+        if chess_piece.player == 1:
+            # if the pawn has never been moved before
+            if chess_piece.first_move == False:
+                valid_moves.append((start_position[0] + str(int(start_position[1]) + 2)))
 
-        if int(start_position[1]) + 1 < 8:
-            valid_moves.append((str(start_position[0]) + str(int(start_position[1]) + 1)))
+            # can move forward?
+            if int(start_position[1]) + 1 < 8:
+                valid_moves.append((start_position[0] + str(int(start_position[1]) + 1)))
+            
+                # can attack diagonally left?
+                if int(start_position[0]) > 0 and board.board_array[int(start_position[0]) - 1][int(start_position[1]) + 1].type != "space":
+                    valid_moves.append(str(int(start_position[0]) - 1) + str(int(start_position[1]) + 1))
+
+                # can attack diagonally right?
+                if int(start_position[0]) < 7 and board.board_array[int(start_position[0]) + 1][int(start_position[1]) + 1].type != "space":
+                    valid_moves.append(str(int(start_position[0]) + 1) + str(int(start_position[1]) + 1))
+            
+
+        else:
+            # if the pawn has never been moved before
+            if chess_piece.first_move == False:
+                valid_moves.append((start_position[0] + str(int(start_position[1]) - 2)))
+
+            # can move forward?
+            if int(start_position[1]) - 1 > 0:
+                valid_moves.append((start_position[0] + str(int(start_position[1]) - 1)))
+
+                # can attack diagonally left?
+                if int(start_position[0]) > 0 and board.board_array[int(start_position[0]) - 1][int(start_position[1]) - 1].type != "space":
+                    valid_moves.append(str(int(start_position[0]) - 1) + str(int(start_position[1]) - 1))
+
+                # can attack diagonally right?
+                if int(start_position[0]) < 7 and board.board_array[int(start_position[0]) + 1][int(start_position[1]) - 1].type != "space":
+                    valid_moves.append(str(int(start_position[0]) + 1) + str(int(start_position[1]) - 1))
+
+
     return valid_moves
 
 
@@ -107,10 +136,7 @@ def main():
     # blessed terminal
     term = Terminal()
 
-    #my_path = Path.cwd() / "danielb-project0"
     my_path = Path.home() / "danielb-project0"
-    #if my_path / "danielb-project0".exists():
-    #    my_path = Path.cwd() / "danielb-project0"
 
     move_history = []
     save_dictionary = {}
@@ -129,6 +155,7 @@ def main():
         move_history = save_dictionary["moveHistory"]
         for i in move_history:
             parsed_moves = parse_move(i)
+            print(find_valid_moves(my_board.board_array[int(parsed_moves[0][0])][int(parsed_moves[0][1])], my_board, parsed_moves[0]))
             my_board.move_piece(parsed_moves[0], parsed_moves[1], whose_turn)
             # update whose turn it is
             if whose_turn == 1:
