@@ -4,12 +4,15 @@ import json
 
 class ChessPiece:
 
-    def __init__(self, player, type, first_move = False):
+    def __init__(self, player, type, first_move = False, moved_recently = False):
         self.player = player
         self.type = type
 
         # whether the piece has ever been moved (used for pawns)
         self.first_move = first_move
+
+        # whether the piece made a move recently (tracking en passant for pawns)
+        self.moved_recently = moved_recently
     
 class Board:
     
@@ -73,7 +76,17 @@ class Board:
             print("first move")
             self.board_array[int(start_location[0])][int(start_location[1])].first_move = True
 
+        # clear moved_recently from previously moved pieces
+        for x in range(8):
+            for y in range(8):
+                if self.board_array[x][y].moved_recently == True:
+                    self.board_array[x][y].moved_recently = False
+
+        # mark that the piece has been moved recently
+        self.board_array[int(start_location[0])][int(start_location[1])].moved_recently = True
+
         self.board_array[int(end_location[0])][int(end_location[1])] = self.board_array[int(start_location[0])][int(start_location[1])]
+        # set empty space where the chess piece used to be
         self.board_array[int(start_location[0])][int(start_location[1])] = ChessPiece(0, "space")
 
 
