@@ -108,37 +108,41 @@ def find_valid_moves(chess_piece, board, start_position):
         if chess_piece.player == 1:
             # if the pawn has never been moved before
             if chess_piece.first_move == False:
-                valid_moves.append((start_position[0] + str(int(start_position[1]) + 2)))
+                # if there are no pieces within 2 spaces in front of the pawn
+                if board.board_array[int(start_position[0])][int(start_position[1]) + 1].type == "space" and board.board_array[int(start_position[0])][int(start_position[1]) + 2].type == "space":
+                    valid_moves.append((start_position[0] + str(int(start_position[1]) + 2)))
 
             # can move forward?
-            if int(start_position[1]) + 1 < 8:
+            if int(start_position[1]) + 1 < 8 and board.board_array[int(start_position[0])][int(start_position[1]) + 1].type == "space":
                 valid_moves.append((start_position[0] + str(int(start_position[1]) + 1)))
             
-                # can attack diagonally left?
-                if int(start_position[0]) > 0 and board.board_array[int(start_position[0]) - 1][int(start_position[1]) + 1].type != "space":
-                    valid_moves.append(str(int(start_position[0]) - 1) + str(int(start_position[1]) + 1))
+            # can attack diagonally left?
+            if int(start_position[0]) > 0 and board.board_array[int(start_position[0]) - 1][int(start_position[1]) + 1].type != "space":
+                valid_moves.append(str(int(start_position[0]) - 1) + str(int(start_position[1]) + 1))
 
-                # can attack diagonally right?
-                if int(start_position[0]) < 7 and board.board_array[int(start_position[0]) + 1][int(start_position[1]) + 1].type != "space":
-                    valid_moves.append(str(int(start_position[0]) + 1) + str(int(start_position[1]) + 1))
+            # can attack diagonally right?
+            if int(start_position[0]) < 7 and board.board_array[int(start_position[0]) + 1][int(start_position[1]) + 1].type != "space":
+                valid_moves.append(str(int(start_position[0]) + 1) + str(int(start_position[1]) + 1))
             
 
         else:
             # if the pawn has never been moved before
             if chess_piece.first_move == False:
-                valid_moves.append((start_position[0] + str(int(start_position[1]) - 2)))
+                # if there are no pieces within 2 spaces in front of the pawn
+                if board.board_array[int(start_position[0])][int(start_position[1]) - 1].type == "space" and board.board_array[int(start_position[0])][int(start_position[1]) - 2].type == "space":
+                    valid_moves.append((start_position[0] + str(int(start_position[1]) - 2)))
 
             # can move forward?
-            if int(start_position[1]) - 1 > 0:
+            if int(start_position[1]) - 1 > 0 and board.board_array[int(start_position[0])][int(start_position[1]) - 1].type == "space":
                 valid_moves.append((start_position[0] + str(int(start_position[1]) - 1)))
 
-                # can attack diagonally left?
-                if int(start_position[0]) > 0 and board.board_array[int(start_position[0]) - 1][int(start_position[1]) - 1].type != "space":
-                    valid_moves.append(str(int(start_position[0]) - 1) + str(int(start_position[1]) - 1))
+             # can attack diagonally left?
+            if int(start_position[0]) > 0 and board.board_array[int(start_position[0]) - 1][int(start_position[1]) - 1].type != "space":
+                valid_moves.append(str(int(start_position[0]) - 1) + str(int(start_position[1]) - 1))
 
-                # can attack diagonally right?
-                if int(start_position[0]) < 7 and board.board_array[int(start_position[0]) + 1][int(start_position[1]) - 1].type != "space":
-                    valid_moves.append(str(int(start_position[0]) + 1) + str(int(start_position[1]) - 1))
+              # can attack diagonally right?
+            if int(start_position[0]) < 7 and board.board_array[int(start_position[0]) + 1][int(start_position[1]) - 1].type != "space":
+                valid_moves.append(str(int(start_position[0]) + 1) + str(int(start_position[1]) - 1))
 
 
     return valid_moves
