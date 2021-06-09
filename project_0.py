@@ -428,6 +428,137 @@ def find_valid_moves(chess_piece, board, start_position):
             else:
                 break
 
+    elif chess_piece.type == "queen":
+        # check cross moves
+        for i in range(1, 8):
+            # room to move right?
+            if int(start_position[0]) + i < 8:
+                if board.board_array[int(start_position[0]) + i][int(start_position[1])].type == "space":
+                    valid_moves.append(Move(str(int(start_position[0]) + i) + start_position[1], None, None))
+                # can attack?    
+                elif board.board_array[int(start_position[0]) + i][int(start_position[1])].player != chess_piece.player:
+                    valid_moves.append(Move(str(int(start_position[0]) + i) + start_position[1],\
+                    board.board_array[int(start_position[0]) + i][int(start_position[1])],\
+                    str(int(start_position[0]) + i) + start_position[1]))
+                    break
+                else:
+                    break
+            else:
+                break
+
+        for i in range(1, 8):
+            # room to move left?
+            if int(start_position[0]) - i > 0:
+                if board.board_array[int(start_position[0]) - i][int(start_position[1])].type == "space":
+                    valid_moves.append(Move(str(int(start_position[0]) - i) + start_position[1], None, None))
+                # can attack?    
+                elif board.board_array[int(start_position[0]) - i][int(start_position[1])].player != chess_piece.player:
+                    valid_moves.append(Move(str(int(start_position[0]) - i) + start_position[1],\
+                    board.board_array[int(start_position[0]) - i][int(start_position[1])],\
+                    str(int(start_position[0]) - i) + start_position[1]))
+                    break
+                else:
+                    break
+            else:
+                break
+
+        for i in range(1, 8):
+            # room to move up?
+            if int(start_position[1]) + i < 8:
+                if board.board_array[int(start_position[0])][int(start_position[1]) + i].type == "space":
+                    valid_moves.append(Move(start_position[0] + str(int(start_position[1]) + i), None, None))
+                # can attack?    
+                elif board.board_array[int(start_position[0])][int(start_position[1]) + i].player != chess_piece.player:
+                    valid_moves.append(Move(start_position[0] + str(int(start_position[1]) + i),\
+                    board.board_array[int(start_position[0])][int(start_position[1]) + i],\
+                    str(int(start_position[0])) + str(int(start_position[1]) + i)))
+                    break
+                else:
+                    break
+            else:
+                break
+
+        for i in range(1, 8):
+            # room to move down?
+            if int(start_position[1]) - i > 0:
+                if board.board_array[int(start_position[0])][int(start_position[1]) - i].type == "space":
+                    valid_moves.append(Move(start_position[0] + str(int(start_position[1]) - i), None, None))
+                # can attack?    
+                elif board.board_array[int(start_position[0])][int(start_position[1]) - i].player != chess_piece.player:
+                    valid_moves.append(Move(start_position[0] + str(int(start_position[1]) - i),\
+                    board.board_array[int(start_position[0])][int(start_position[1]) - i],\
+                    str(int(start_position[0])) + str(int(start_position[1]) - i)))
+                    break
+                else:
+                    break
+            else:
+                break
+
+        # check diagonal moves
+        for i in range(1, 8):
+            # room to move upper right?
+            if int(start_position[0]) + i < 8 and int(start_position[1]) + i < 8:
+                if board.board_array[int(start_position[0]) + i][int(start_position[1]) + i].type == "space":
+                    valid_moves.append(Move(str(int(start_position[0]) + i) + str(int(start_position[1]) + i), None, None))
+                # can attack?
+                elif board.board_array[int(start_position[0]) + i][int(start_position[1]) + i].player != chess_piece.player:
+                    valid_moves.append(Move(str(int(start_position[0]) + i) + str(int(start_position[1]) + i),\
+                    board.board_array[int(start_position[0]) + i][int(start_position[1]) + i],\
+                    str(int(start_position[0]) + i) + str(int(start_position[1]) + i)))
+                    break
+                else:
+                    break
+            else:
+                break
+
+        for i in range(1, 8):
+            # room to move upper left?
+            if int(start_position[0]) - i > 0 and int(start_position[1]) + i < 8:
+                if board.board_array[int(start_position[0]) - i][int(start_position[1]) + i].type == "space":
+                    valid_moves.append(Move(str(int(start_position[0]) - i) + str(int(start_position[1]) + i), None, None))
+                # can attack?
+                elif board.board_array[int(start_position[0]) - i][int(start_position[1]) + i].player != chess_piece.player:
+                    valid_moves.append(Move(str(int(start_position[0]) - i) + str(int(start_position[1]) + i),\
+                    board.board_array[int(start_position[0]) - i][int(start_position[1]) + i],\
+                    str(int(start_position[0]) - i) + str(int(start_position[1]) + i)))
+                    break
+                else:
+                    break
+            else:
+                break
+
+        for i in range(1, 8):
+            # room to move lower right?
+            if int(start_position[0]) + i < 8 and int(start_position[1]) - i > 0:
+                if board.board_array[int(start_position[0]) + i][int(start_position[1]) - i].type == "space":
+                    valid_moves.append(Move(str(int(start_position[0]) + i) + str(int(start_position[1]) - i), None, None))
+                # can attack?
+                elif board.board_array[int(start_position[0]) + i][int(start_position[1]) - i].player != chess_piece.player:
+                    valid_moves.append(Move(str(int(start_position[0]) + i) + str(int(start_position[1]) - i),\
+                    board.board_array[int(start_position[0]) + i][int(start_position[1]) - i],\
+                    str(int(start_position[0]) + i) + str(int(start_position[1]) - i)))
+                    break
+                else:
+                    break
+            else:
+                break
+
+        for i in range(1, 8):
+            # room to move lower left?
+            if int(start_position[0]) - i > 0 and int(start_position[1]) - i > 0:
+                if board.board_array[int(start_position[0]) - i][int(start_position[1]) - i].type == "space":
+                    valid_moves.append(Move(str(int(start_position[0]) - i) + str(int(start_position[1]) - i), None, None))
+                # can attack?
+                elif board.board_array[int(start_position[0]) - i][int(start_position[1]) - i].player != chess_piece.player:
+                    valid_moves.append(Move(str(int(start_position[0]) - i) + str(int(start_position[1]) - i),\
+                    board.board_array[int(start_position[0]) - i][int(start_position[1]) - i],\
+                    str(int(start_position[0]) - i) + str(int(start_position[1]) - i)))
+                    break
+                else:
+                    break
+            else:
+                break
+
 
     return valid_moves
 
