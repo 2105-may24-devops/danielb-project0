@@ -82,8 +82,12 @@ class Board:
                 if self.board_array[x][y].moved_recently == True:
                     self.board_array[x][y].moved_recently = False
 
-        # mark that the piece has been moved recently
-        self.board_array[int(start_location[0])][int(start_location[1])].moved_recently = True
+        # if a pawn moved two spaces
+        if abs(int(start_location[1]) - int(end_location[1])) > 1 and self.board_array[int(start_location[0])][int(start_location[1])].type == "pawn":
+            print("a pawn moved two spaces")
+            # mark that the piece has been moved recently
+            self.board_array[int(start_location[0])][int(start_location[1])].moved_recently = True
+
 
         self.board_array[int(end_location[0])][int(end_location[1])] = self.board_array[int(start_location[0])][int(start_location[1])]
         # set empty space where the chess piece used to be
@@ -115,14 +119,31 @@ def find_valid_moves(chess_piece, board, start_position):
             # can move forward?
             if int(start_position[1]) + 1 < 8 and board.board_array[int(start_position[0])][int(start_position[1]) + 1].type == "space":
                 valid_moves.append((start_position[0] + str(int(start_position[1]) + 1)))
-            
-            # can attack diagonally left?
-            if int(start_position[0]) > 0 and board.board_array[int(start_position[0]) - 1][int(start_position[1]) + 1].type != "space":
-                valid_moves.append(str(int(start_position[0]) - 1) + str(int(start_position[1]) + 1))
 
-            # can attack diagonally right?
-            if int(start_position[0]) < 7 and board.board_array[int(start_position[0]) + 1][int(start_position[1]) + 1].type != "space":
-                valid_moves.append(str(int(start_position[0]) + 1) + str(int(start_position[1]) + 1))
+            # can attack en passant?
+            if int(start_position[1]) + 1 < 8: # if there is room to move forward
+
+                if int(start_position[0]) > 0: # if there is room to the left
+                    # if there is an enemy pawn to the left and it is vulnerable to en passant
+                    if board.board_array[int(start_position[0]) - 1][int(start_position[1])].player == 2 and \
+                    board.board_array[int(start_position[0]) - 1][int(start_position[1])].type == "pawn" and \
+                    board.board_array[int(start_position[0]) - 1][int(start_position[1])].moved_recently == True:
+                        print("en passant attack possible")
+                        valid_moves.append(str(int(start_position[0]) - 1) + str(int(start_position[1]) + 1))
+                    # can attack diagonally left? 
+                    elif board.board_array[int(start_position[0]) - 1][int(start_position[1]) + 1].type != "space":
+                        valid_moves.append(str(int(start_position[0]) - 1) + str(int(start_position[1]) + 1))
+            
+                if int(start_position[0]) < 7: # if there is room to the right
+                    # if there is an enemy pawn to the right and it is vulnerable to en passant
+                    if board.board_array[int(start_position[0]) + 1][int(start_position[1])].player == 2 and \
+                    board.board_array[int(start_position[0]) + 1][int(start_position[1])].type == "pawn" and \
+                    board.board_array[int(start_position[0]) + 1][int(start_position[1])].moved_recently == True:
+                        print("en passant attack possible")
+                        valid_moves.append(str(int(start_position[0]) + 1) + str(int(start_position[1]) + 1))
+                    # can attack diagonally right? 
+                    elif board.board_array[int(start_position[0]) + 1][int(start_position[1]) + 1].type != "space":
+                        valid_moves.append(str(int(start_position[0]) + 1) + str(int(start_position[1]) + 1))
             
 
         else:
@@ -136,14 +157,30 @@ def find_valid_moves(chess_piece, board, start_position):
             if int(start_position[1]) - 1 > 0 and board.board_array[int(start_position[0])][int(start_position[1]) - 1].type == "space":
                 valid_moves.append((start_position[0] + str(int(start_position[1]) - 1)))
 
-             # can attack diagonally left?
-            if int(start_position[0]) > 0 and board.board_array[int(start_position[0]) - 1][int(start_position[1]) - 1].type != "space":
-                valid_moves.append(str(int(start_position[0]) - 1) + str(int(start_position[1]) - 1))
+            # can attack en passant?
+            if int(start_position[1]) - 1 > 0: # if there is room to move forward
 
-              # can attack diagonally right?
-            if int(start_position[0]) < 7 and board.board_array[int(start_position[0]) + 1][int(start_position[1]) - 1].type != "space":
-                valid_moves.append(str(int(start_position[0]) + 1) + str(int(start_position[1]) - 1))
-
+                if int(start_position[0]) > 0: # if there is room to the left
+                    # if there is an enemy pawn to the left and it is vulnerable to en passant
+                    if board.board_array[int(start_position[0]) - 1][int(start_position[1])].player == 1 and \
+                    board.board_array[int(start_position[0]) - 1][int(start_position[1])].type == "pawn" and \
+                    board.board_array[int(start_position[0]) - 1][int(start_position[1])].moved_recently == True:
+                        print("en passant attack possible")
+                        valid_moves.append(str(int(start_position[0]) - 1) + str(int(start_position[1]) - 1))
+                    # can attack diagonally left? 
+                    elif board.board_array[int(start_position[0]) - 1][int(start_position[1]) - 1].type != "space":
+                        valid_moves.append(str(int(start_position[0]) - 1) + str(int(start_position[1]) - 1))
+            
+                if int(start_position[0]) < 7: # if there is room to the right
+                    # if there is an enemy pawn to the right and it is vulnerable to en passant
+                    if board.board_array[int(start_position[0]) + 1][int(start_position[1])].player == 1 and \
+                    board.board_array[int(start_position[0]) + 1][int(start_position[1])].type == "pawn" and \
+                    board.board_array[int(start_position[0]) + 1][int(start_position[1])].moved_recently == True:
+                        print("en passant attack possible")
+                        valid_moves.append(str(int(start_position[0]) + 1) + str(int(start_position[1]) - 1))
+                    # can attack diagonally right? 
+                    elif board.board_array[int(start_position[0]) + 1][int(start_position[1]) - 1].type != "space":
+                        valid_moves.append(str(int(start_position[0]) + 1) + str(int(start_position[1]) - 1))
 
     return valid_moves
 
