@@ -1,12 +1,14 @@
 from blessed import Terminal
 from pathlib import Path
 import json
+import random
 
 class ChessPiece:
 
-    def __init__(self, player, type, first_move = False, moved_recently = False):
+    def __init__(self, player, type, first_move = False, moved_recently = False, location = None):
         self.player = player
         self.type = type
+        self.location = location
 
         # whether the piece has ever been moved (used for pawns)
         self.first_move = first_move
@@ -67,13 +69,14 @@ class Board:
     def move_piece(self, start_location, end_location, player):
         # if there is a piece at the start location that belongs to the player
         if self.board_array[int(start_location[0])][int(start_location[1])].player == player:
-            print("You have a piece here")
+            pass
+            #print("You have a piece here")
         else:
-            print("You don't have a piece here")
+            #print("You don't have a piece here")
             return
 
         if self.board_array[int(start_location[0])][int(start_location[1])].first_move == False:
-            print("first move")
+            #print("first move")
             self.board_array[int(start_location[0])][int(start_location[1])].first_move = True
 
         # clear moved_recently from previously moved pieces
@@ -84,7 +87,7 @@ class Board:
 
         # if a pawn moved two spaces
         if abs(int(start_location[1]) - int(end_location[1])) > 1 and self.board_array[int(start_location[0])][int(start_location[1])].type == "pawn":
-            print("a pawn moved two spaces")
+            #print("a pawn moved two spaces")
             # mark that the piece has been moved recently
             self.board_array[int(start_location[0])][int(start_location[1])].moved_recently = True
 
@@ -140,7 +143,7 @@ def find_valid_moves(chess_piece, board, start_position):
                     if board.board_array[int(start_position[0]) - 1][int(start_position[1])].player == 2 and \
                     board.board_array[int(start_position[0]) - 1][int(start_position[1])].type == "pawn" and \
                     board.board_array[int(start_position[0]) - 1][int(start_position[1])].moved_recently == True:
-                        print("en passant attack possible")
+                        #print("en passant attack possible")
                         #valid_moves.append(str(int(start_position[0]) - 1) + str(int(start_position[1]) + 1))
                         valid_moves.append(Move(str(int(start_position[0]) - 1) + str(int(start_position[1]) + 1),\
                         board.board_array[int(start_position[0]) - 1][int(start_position[1])],\
@@ -157,7 +160,7 @@ def find_valid_moves(chess_piece, board, start_position):
                     if board.board_array[int(start_position[0]) + 1][int(start_position[1])].player == 2 and \
                     board.board_array[int(start_position[0]) + 1][int(start_position[1])].type == "pawn" and \
                     board.board_array[int(start_position[0]) + 1][int(start_position[1])].moved_recently == True:
-                        print("en passant attack possible")
+                        #print("en passant attack possible")
                         #valid_moves.append(str(int(start_position[0]) + 1) + str(int(start_position[1]) + 1))
                         valid_moves.append(Move(str(int(start_position[0]) + 1) + str(int(start_position[1]) + 1),\
                         board.board_array[int(start_position[0]) + 1][int(start_position[1])],\
@@ -191,7 +194,7 @@ def find_valid_moves(chess_piece, board, start_position):
                     if board.board_array[int(start_position[0]) - 1][int(start_position[1])].player == 1 and \
                     board.board_array[int(start_position[0]) - 1][int(start_position[1])].type == "pawn" and \
                     board.board_array[int(start_position[0]) - 1][int(start_position[1])].moved_recently == True:
-                        print("en passant attack possible")
+                        #print("en passant attack possible")
                         #valid_moves.append(str(int(start_position[0]) - 1) + str(int(start_position[1]) - 1))
                         valid_moves.append(Move(str(int(start_position[0]) - 1) + str(int(start_position[1]) - 1),\
                         board.board_array[int(start_position[0]) - 1][int(start_position[1])],\
@@ -209,7 +212,7 @@ def find_valid_moves(chess_piece, board, start_position):
                     if board.board_array[int(start_position[0]) + 1][int(start_position[1])].player == 1 and \
                     board.board_array[int(start_position[0]) + 1][int(start_position[1])].type == "pawn" and \
                     board.board_array[int(start_position[0]) + 1][int(start_position[1])].moved_recently == True:
-                        print("en passant attack possible")
+                        #print("en passant attack possible")
                         #valid_moves.append(str(int(start_position[0]) + 1) + str(int(start_position[1]) - 1))
                         valid_moves.append(Move(str(int(start_position[0]) + 1) + str(int(start_position[1]) - 1),\
                         board.board_array[int(start_position[0]) + 1][int(start_position[1])],\
@@ -664,6 +667,79 @@ def validateMove(board, move):
             return True
     return False
 
+def easy_bot(board, whoseTurn):
+    piece_list = []
+
+    # scan board for own pieces
+    for x in range(8):
+        for y in range(8):
+            if board.board_array[x][y].player == whoseTurn:
+                board.board_array[x][y].location = str(x) + str(y)
+                piece_list.append(board.board_array[x][y])
+
+    #for i in piece_list:
+        #print(i.location + " " + i.type)
+
+    while True:
+        # pick a piece at random
+        try_piece = random.choice(piece_list)
+
+        if len(find_valid_moves(try_piece, board, try_piece.location)) > 0:
+            # pick a valid move at random
+            move = random.choice(find_valid_moves(try_piece, board, try_piece.location))
+            break
+    
+    move_list = []
+    move_list.append(try_piece.location)
+    move_list.append(move.move)
+    return move_list
+
+def play_vs_bot(my_path):
+    my_board = Board()
+    move_history = []
+
+    whose_turn = 1
+
+    while True:
+        my_board.show_board()
+
+        if whose_turn == 1:
+            print("\nIt is player " + str(whose_turn) + "'s turn")
+
+
+            input_move = input("Enter your move. (Example: a2 to a4) Or enter option for options\n")
+            if input_move == "option":
+                option = input("Enter an option: history, save\n")
+                if option == "history":
+                    for i in move_history:
+                        print(i)
+                if option == "save":
+                    save_dictionary = {}
+                    save_dictionary["moveHistory"] = move_history
+                    with open(my_path / "saved_game.json", "w") as outfile:
+                        json.dump(save_dictionary, outfile, indent=4)
+                continue
+
+            parsed_moves = parse_move(input_move)
+        else:
+            print("\nIt is the bot's turn.")
+            parsed_moves = easy_bot(my_board, whose_turn)
+            print("easy bot moved " + my_board.board_array[int(parsed_moves[0][0])][int(parsed_moves[0][1])].type)
+
+        if validateMove(my_board, parsed_moves) != True:
+            print("Invalid move!")
+            continue
+
+        move_history.append(input_move)
+
+        my_board.move_piece(parsed_moves[0], parsed_moves[1], whose_turn)
+
+        # update whose turn it is
+        if whose_turn == 1:
+            whose_turn = 2
+        else:
+            whose_turn = 1
+
 def main():
     # blessed terminal
     term = Terminal()
@@ -678,6 +754,8 @@ def main():
     whose_turn = 1
 
     my_board = Board()
+
+    easy_bot(my_board, 2)
 
     print("Welcome to Chess\n")
     option = input("Enter 1 to start new game, Enter 2 to load a saved game\n")
@@ -701,6 +779,10 @@ def main():
 
 
     my_board.show_board()
+
+    option = input("Enter 1 for player vs player, Enter 2 to play against easy bot\n")
+    if option == "2":
+        play_vs_bot(my_path)
 
     while True:
         print("\nIt is player " + str(whose_turn) + "'s turn")
