@@ -117,6 +117,7 @@ def parse_move(input_move):
 # returns valid move positions for a given chess piece
 def find_valid_moves(chess_piece, board, start_position):
     valid_moves = []
+
     if chess_piece.type == "pawn":
         if chess_piece.player == 1:
             # if the pawn has never been moved before
@@ -221,6 +222,81 @@ def find_valid_moves(chess_piece, board, start_position):
                         board.board_array[int(start_position[0]) + 1][int(start_position[1]) - 1],\
                         str(int(start_position[0]) + 1) + str(int(start_position[1]) - 1)))
 
+    elif chess_piece.type == "knight":
+        # can move extreme upper left?
+        if int(start_position[0]) > 0 and int(start_position[1]) < 5:
+            if board.board_array[int(start_position[0]) - 1][int(start_position[1]) + 2].type == "space":
+                valid_moves.append(Move(str(int(start_position[0]) - 1) + str(int(start_position[1]) + 2), None, None))
+            # can attack?
+            elif board.board_array[int(start_position[0]) - 1][int(start_position[1]) + 2].player != chess_piece.player:
+                valid_moves.append(Move(str(int(start_position[0]) - 1) + str(int(start_position[1]) + 2),\
+                board.board_array[int(start_position[0]) - 1][int(start_position[1]) + 2],\
+                str(int(start_position[0]) - 1) + str(int(start_position[1]) + 2)))
+        # can move upper left?
+        if int(start_position[0]) > 1 and int(start_position[1]) < 7:
+            if board.board_array[int(start_position[0]) - 2][int(start_position[1]) + 1].type == "space":
+                valid_moves.append(Move(str(int(start_position[0]) - 2) + str(int(start_position[1]) + 1), None, None))
+            # can attack?
+            elif board.board_array[int(start_position[0]) - 2][int(start_position[1]) + 1].player != chess_piece.player:
+                valid_moves.append(Move(str(int(start_position[0]) - 2) + str(int(start_position[1]) + 1),\
+                board.board_array[int(start_position[0]) - 2][int(start_position[1]) + 1],\
+                str(int(start_position[0]) - 2) + str(int(start_position[1]) + 1)))
+        # can move lower left?
+        if int(start_position[0]) > 1 and int(start_position[1]) > 0:
+            if board.board_array[int(start_position[0]) - 2][int(start_position[1]) - 1].type == "space":
+                valid_moves.append(Move(str(int(start_position[0]) - 2) + str(int(start_position[1]) - 1), None, None))
+            # can attack?
+            elif board.board_array[int(start_position[0]) - 2][int(start_position[1]) - 1].player != chess_piece.player:
+                valid_moves.append(Move(str(int(start_position[0]) - 2) + str(int(start_position[1]) - 1),\
+                board.board_array[int(start_position[0]) - 2][int(start_position[1]) - 1],\
+                str(int(start_position[0]) - 2) + str(int(start_position[1]) - 1)))
+        # can move extreme lower left?
+        if int(start_position[0]) > 0 and int(start_position[1]) > 2:
+            if board.board_array[int(start_position[0]) - 1][int(start_position[1]) - 2].type == "space":
+                valid_moves.append(Move(str(int(start_position[0]) - 1) + str(int(start_position[1]) - 2), None, None))
+            # can attack?
+            elif board.board_array[int(start_position[0]) - 1][int(start_position[1]) - 2].player != chess_piece.player:
+                valid_moves.append(Move(str(int(start_position[0]) - 1) + str(int(start_position[1]) - 2),\
+                board.board_array[int(start_position[0]) - 1][int(start_position[1]) - 2],\
+                str(int(start_position[0]) - 1) + str(int(start_position[1]) - 2)))
+
+        # can move extreme upper right?
+        if int(start_position[0]) < 7 and int(start_position[1]) < 5:
+            if board.board_array[int(start_position[0]) + 1][int(start_position[1]) + 2].type == "space":
+                valid_moves.append(Move(str(int(start_position[0]) + 1) + str(int(start_position[1]) + 2), None, None))
+            # can attack?
+            elif board.board_array[int(start_position[0]) + 1][int(start_position[1]) + 2].player != chess_piece.player:
+                valid_moves.append(Move(str(int(start_position[0]) + 1) + str(int(start_position[1]) + 2),\
+                board.board_array[int(start_position[0]) + 1][int(start_position[1]) + 2],\
+                str(int(start_position[0]) + 1) + str(int(start_position[1]) + 2)))
+        # can move upper right?
+        if int(start_position[0]) < 6 and int(start_position[1]) < 7:
+            if board.board_array[int(start_position[0]) + 2][int(start_position[1]) + 1].type == "space":
+                valid_moves.append(Move(str(int(start_position[0]) + 2) + str(int(start_position[1]) + 1), None, None))
+            # can attack?
+            elif board.board_array[int(start_position[0]) + 2][int(start_position[1]) + 1].player != chess_piece.player:
+                valid_moves.append(Move(str(int(start_position[0]) + 2) + str(int(start_position[1]) + 1),\
+                board.board_array[int(start_position[0]) + 2][int(start_position[1]) + 1],\
+                str(int(start_position[0]) + 2) + str(int(start_position[1]) + 1)))
+        # can move lower right?
+        if int(start_position[0]) < 6 and int(start_position[1]) > 0:
+            if board.board_array[int(start_position[0]) + 2][int(start_position[1]) - 1].type == "space":
+                valid_moves.append(Move(str(int(start_position[0]) + 2) + str(int(start_position[1]) - 1), None, None))
+            # can attack?
+            elif board.board_array[int(start_position[0]) + 2][int(start_position[1]) - 1].player != chess_piece.player:
+                valid_moves.append(Move(str(int(start_position[0]) + 2) + str(int(start_position[1]) - 1),\
+                board.board_array[int(start_position[0]) + 2][int(start_position[1]) - 1],\
+                str(int(start_position[0]) + 2) + str(int(start_position[1]) - 1)))
+        # can move extreme lower right?
+        if int(start_position[0]) < 7 and int(start_position[1]) > 2:
+            if board.board_array[int(start_position[0]) + 1][int(start_position[1]) - 2].type == "space":
+                valid_moves.append(Move(str(int(start_position[0]) + 1) + str(int(start_position[1]) - 2), None, None))
+            # can attack?
+            elif board.board_array[int(start_position[0]) + 1][int(start_position[1]) - 2].player != chess_piece.player:
+                valid_moves.append(Move(str(int(start_position[0]) + 1) + str(int(start_position[1]) - 2),\
+                board.board_array[int(start_position[0]) + 1][int(start_position[1]) - 2],\
+                str(int(start_position[0]) + 1) + str(int(start_position[1]) - 2)))
+
 
     return valid_moves
 
@@ -279,7 +355,9 @@ def main():
 
         parsed_moves = parse_move(input_move)
 
-        print(find_valid_moves(my_board.board_array[int(parsed_moves[0][0])][int(parsed_moves[0][1])], my_board, parsed_moves[0]))
+        found_moves = find_valid_moves(my_board.board_array[int(parsed_moves[0][0])][int(parsed_moves[0][1])], my_board, parsed_moves[0])
+        for x in found_moves:
+            print(x.move)
 
         move_history.append(input_move)
 
