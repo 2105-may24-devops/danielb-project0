@@ -655,11 +655,20 @@ def find_valid_moves(chess_piece, board, start_position):
 
     return valid_moves
 
+# returns True or False depending on whether the supplied move is valid
+def validateMove(board, move):
+    valid_moves = find_valid_moves(board.board_array[int(move[0][0])][int(move[0][1])], board, move[0])
 
+    for i in valid_moves:
+        if i.move == move[1]:
+            return True
+    return False
 
 def main():
     # blessed terminal
     term = Terminal()
+
+    #print("{t.red_on_yellow}TEST".format(t=term))
 
     my_path = Path.home() / "danielb-project0"
 
@@ -710,9 +719,9 @@ def main():
 
         parsed_moves = parse_move(input_move)
 
-        found_moves = find_valid_moves(my_board.board_array[int(parsed_moves[0][0])][int(parsed_moves[0][1])], my_board, parsed_moves[0])
-        for x in found_moves:
-            print(x.move)
+        if validateMove(my_board, parsed_moves) != True:
+            print("Invalid move!")
+            continue
 
         move_history.append(input_move)
 
