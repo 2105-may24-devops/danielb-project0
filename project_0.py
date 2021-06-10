@@ -3,6 +3,8 @@ from pathlib import Path
 import json
 import random
 
+import blessed
+
 class ChessPiece:
 
     def __init__(self, player, type, first_move = False, moved_recently = False, location = None):
@@ -53,18 +55,31 @@ class Board:
         self.board_array[4][7] = ChessPiece(2, "x")
 
     # print out the current state of the board
-    def show_board(self):
-        print("   a  b  c  d  e  f  g  h\n")
+    def show_board(self, term):
+        print(term.red_on_gray60(" abcdefgh "))
         for y in reversed(range(len(self.board_array))):
-            print(y + 1, end='  ')
+            print(term.red_on_gray60(str(y + 1)), end="")
+
             for x in range(len(self.board_array[y])):
-                if self.board_array[x][y].player == 1:
-                    print(self.board_array[x][y].type.upper()[0], end='  ')
+                if x % 2 == y % 2:
+                    if self.board_array[x][y].player == 1:
+                        print(term.snow_on_orange4(self.board_array[x][y].type.upper()[0]), end="")
+                    elif self.board_array[x][y].player == 2:
+                        print(term.black_on_orange4(self.board_array[x][y].type.upper()[0]), end="")
+                    else:
+                        print(term.orange4_on_orange4(" "), end="")
                 else:
-                    print(self.board_array[x][y].type.lower()[0], end='  ')
-            print(y + 1, end='')
-            print("\n")
-        print("   a  b  c  d  e  f  g  h")
+                    if self.board_array[x][y].player == 1:
+                        print(term.snow_on_orange3(self.board_array[x][y].type.upper()[0]), end="")
+                    elif self.board_array[x][y].player == 2:
+                        print(term.black_on_orange3(self.board_array[x][y].type.upper()[0]), end="")
+                    else:
+                        print(term.orange3_on_orange3(" "), end="")
+                    
+            print(term.red_on_gray60(str(y + 1)), end="")
+            print("")
+        print(term.red_on_gray60(" abcdefgh "), end="")
+        print("\n")
 
     def move_piece(self, start_location, end_location, player):
         # if there is a piece at the start location that belongs to the player
@@ -694,14 +709,14 @@ def easy_bot(board, whoseTurn):
     move_list.append(move.move)
     return move_list
 
-def play_vs_bot(my_path):
+def play_vs_bot(my_path, term):
     my_board = Board()
     move_history = []
 
     whose_turn = 1
 
     while True:
-        my_board.show_board()
+        my_board.show_board(term)
 
         if whose_turn == 1:
             print("\nIt is player " + str(whose_turn) + "'s turn")
@@ -740,11 +755,15 @@ def play_vs_bot(my_path):
         else:
             whose_turn = 1
 
+def echo_yx(cursor, text):
+    """Move to ``cursor`` and display ``text``."""
+    print(cursor.term.move_yx(cursor.y, cursor.x) + text)
+
 def main():
     # blessed terminal
     term = Terminal()
-
-    #print("{t.red_on_yellow}TEST".format(t=term))
+    my_board = Board()
+    my_board.show_board(term)
 
     my_path = Path.home() / "danielb-project0"
 
@@ -753,7 +772,7 @@ def main():
 
     whose_turn = 1
 
-    my_board = Board()
+
 
     easy_bot(my_board, 2)
 
@@ -778,11 +797,11 @@ def main():
                 whose_turn = 1
 
 
-    my_board.show_board()
+    my_board.show_board(term)
 
     option = input("Enter 1 for player vs player, Enter 2 to play against easy bot\n")
     if option == "2":
-        play_vs_bot(my_path)
+        play_vs_bot(my_path, term)
 
     while True:
         print("\nIt is player " + str(whose_turn) + "'s turn")
@@ -808,7 +827,7 @@ def main():
         move_history.append(input_move)
 
         my_board.move_piece(parsed_moves[0], parsed_moves[1], whose_turn)
-        my_board.show_board()
+        my_board.show_board(term)
 
         # update whose turn it is
         if whose_turn == 1:
