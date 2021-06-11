@@ -785,7 +785,6 @@ def play_vs_bot(my_path, term):
     my_board.show_board(term)
 
     while True:
-
         if whose_turn == 1:
             print("\nIt is player " + str(whose_turn) + "'s turn")
 
@@ -832,6 +831,29 @@ def echo_yx(cursor, text):
     """Move to ``cursor`` and display ``text``."""
     print(cursor.term.move_yx(cursor.y, cursor.x) + text)
 
+# checks if each player stil has their king
+def check_for_win(board):
+    p1_alive = False
+    p2_alive = False
+
+    for y in range(len(board.board_array)):
+        for x in range(len(board.board_array[y])):
+            if board.board_array[x][y].type == "x" and board.board_array[x][y].player == 1:
+                p1_alive = True
+            if board.board_array[x][y].type == "x" and board.board_array[x][y].player == 2:
+                p2_alive = True
+    
+    if p1_alive == False:
+        return "p2_win"
+
+    if p2_alive == False:
+        return "p1_win"
+
+    return "ongoing"
+
+
+
+
 def main():
     # blessed terminal
     term = Terminal()
@@ -860,6 +882,8 @@ def main():
                     whose_turn = 2
                 else:
                     whose_turn = 1
+            if check_for_win(my_board) == "p1_win":
+                sys.exit(0)
             sys.exit(1)
 
     easy_bot(my_board, 2)
