@@ -3,5 +3,4 @@
   tasks:
 
   - name: test game outcome
-    ansible.builtin.git:
-      script: ~/danielb-project0/test_player1_win.sh
+    command: sh ~/danielb-project0/test_player1_win.sh
