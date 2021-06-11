@@ -868,7 +868,7 @@ def main():
 
     if len(sys.argv) > 1:
         if sys.argv[1] == "test":
-            with open(my_path / sys.argv[2]) as infile:
+            with open(sys.argv[2]) as infile:
                 save_dictionary = json.load(infile)
             move_history = save_dictionary["moveHistory"]
             for i in move_history:
