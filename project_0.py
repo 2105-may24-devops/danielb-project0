@@ -10,6 +10,8 @@ class ChessPiece:
     def __init__(self, player, type, first_move = False, moved_recently = False, location = None):
         self.player = player
         self.type = type
+
+        # this is stored as a string
         self.location = location
 
         # whether the piece has ever been moved (used for pawns)
@@ -29,52 +31,66 @@ class Board:
     # sets up the chess pieces on the board
     def populate(self):
         for i in range(8):
-            self.board_array[i][1] = ChessPiece(1, "pawn")
-            self.board_array[i][6] = ChessPiece(2, "pawn")
+            self.board_array[i][1] = ChessPiece(1, "pawn", location=str(i) + "1")
+            self.board_array[i][6] = ChessPiece(2, "pawn", location=str(i) + "6")
 
-        self.board_array[0][0] = ChessPiece(1, "rook")
-        self.board_array[7][0] = ChessPiece(1, "rook")
-        self.board_array[0][7] = ChessPiece(2, "rook")
-        self.board_array[7][7] = ChessPiece(2, "rook")
+        self.board_array[0][0] = ChessPiece(1, "rook", location="00")
+        self.board_array[7][0] = ChessPiece(1, "rook", location="70")
+        self.board_array[0][7] = ChessPiece(2, "rook", location="07")
+        self.board_array[7][7] = ChessPiece(2, "rook", location="77")
 
-        self.board_array[1][0] = ChessPiece(1, "knight")
-        self.board_array[6][0] = ChessPiece(1, "knight")
-        self.board_array[1][7] = ChessPiece(2, "knight")
-        self.board_array[6][7] = ChessPiece(2, "knight")
+        self.board_array[1][0] = ChessPiece(1, "knight", location="10")
+        self.board_array[6][0] = ChessPiece(1, "knight", location="60")
+        self.board_array[1][7] = ChessPiece(2, "knight", location="17")
+        self.board_array[6][7] = ChessPiece(2, "knight", location="67")
 
-        self.board_array[2][0] = ChessPiece(1, "bishop")
-        self.board_array[5][0] = ChessPiece(1, "bishop")
-        self.board_array[2][7] = ChessPiece(2, "bishop")
-        self.board_array[5][7] = ChessPiece(2, "bishop")
+        self.board_array[2][0] = ChessPiece(1, "bishop", location="20")
+        self.board_array[5][0] = ChessPiece(1, "bishop", location="50")
+        self.board_array[2][7] = ChessPiece(2, "bishop", location="27")
+        self.board_array[5][7] = ChessPiece(2, "bishop", location="57")
 
-        self.board_array[3][0] = ChessPiece(1, "queen")
-        self.board_array[3][7] = ChessPiece(2, "queen")
+        self.board_array[3][0] = ChessPiece(1, "queen", location="30")
+        self.board_array[3][7] = ChessPiece(2, "queen", location="37")
 
         # king
-        self.board_array[4][0] = ChessPiece(1, "x")
-        self.board_array[4][7] = ChessPiece(2, "x")
+        self.board_array[4][0] = ChessPiece(1, "x", location="40")
+        self.board_array[4][7] = ChessPiece(2, "x", location="47")
 
     # print out the current state of the board
-    def show_board(self, term):
+    def show_board(self, term, option="default", moving_piece=None, valid_moves=None):
         print(term.red_on_gray60(" abcdefgh "))
+
         for y in reversed(range(len(self.board_array))):
             print(term.red_on_gray60(str(y + 1)), end="")
 
             for x in range(len(self.board_array[y])):
-                if x % 2 == y % 2:
+                if option == "show_move" and (str(x) + str(y)) == moving_piece.location:
+                        if self.board_array[x][y].player == 1:
+                            print(term.snow_on_red(self.board_array[x][y].type.upper()[0]), end="")
+                        elif self.board_array[x][y].player == 2:
+                            print(term.black_on_red(self.board_array[x][y].type.upper()[0]), end="")
+                elif option == "show_move" and any(move.move == (str(x) + str(y)) for move in valid_moves):
                     if self.board_array[x][y].player == 1:
-                        print(term.snow_on_orange4(self.board_array[x][y].type.upper()[0]), end="")
+                        print(term.snow_on_cyan(self.board_array[x][y].type.upper()[0]), end="")
                     elif self.board_array[x][y].player == 2:
-                        print(term.black_on_orange4(self.board_array[x][y].type.upper()[0]), end="")
+                        print(term.black_on_cyan(self.board_array[x][y].type.upper()[0]), end="")
                     else:
-                        print(term.orange4_on_orange4(" "), end="")
+                        print(term.red_on_cyan(" "), end="")
                 else:
-                    if self.board_array[x][y].player == 1:
-                        print(term.snow_on_orange3(self.board_array[x][y].type.upper()[0]), end="")
-                    elif self.board_array[x][y].player == 2:
-                        print(term.black_on_orange3(self.board_array[x][y].type.upper()[0]), end="")
+                    if x % 2 == y % 2:
+                        if self.board_array[x][y].player == 1:
+                            print(term.snow_on_orange4(self.board_array[x][y].type.upper()[0]), end="")
+                        elif self.board_array[x][y].player == 2:
+                            print(term.black_on_orange4(self.board_array[x][y].type.upper()[0]), end="")
+                        else:
+                            print(term.orange4_on_orange4(" "), end="")
                     else:
-                        print(term.orange3_on_orange3(" "), end="")
+                        if self.board_array[x][y].player == 1:
+                            print(term.snow_on_orange3(self.board_array[x][y].type.upper()[0]), end="")
+                        elif self.board_array[x][y].player == 2:
+                            print(term.black_on_orange3(self.board_array[x][y].type.upper()[0]), end="")
+                        else:
+                            print(term.orange3_on_orange3(" "), end="")
                     
             print(term.red_on_gray60(str(y + 1)), end="")
             print("")
@@ -90,6 +106,7 @@ class Board:
             #print("You don't have a piece here")
             return
 
+        # mark that the piece has been moved before
         if self.board_array[int(start_location[0])][int(start_location[1])].first_move == False:
             #print("first move")
             self.board_array[int(start_location[0])][int(start_location[1])].first_move = True
@@ -106,7 +123,10 @@ class Board:
             # mark that the piece has been moved recently
             self.board_array[int(start_location[0])][int(start_location[1])].moved_recently = True
 
+        # update location
+        self.board_array[int(start_location[0])][int(start_location[1])].location = end_location[0] + end_location[1]
 
+        # copy the piece to its new location
         self.board_array[int(end_location[0])][int(end_location[1])] = self.board_array[int(start_location[0])][int(start_location[1])]
         # set empty space where the chess piece used to be
         self.board_array[int(start_location[0])][int(start_location[1])] = ChessPiece(0, "space")
@@ -314,6 +334,7 @@ def find_valid_moves(chess_piece, board, start_position):
                 valid_moves.append(Move(str(int(start_position[0]) + 1) + str(int(start_position[1]) - 2),\
                 board.board_array[int(start_position[0]) + 1][int(start_position[1]) - 2],\
                 str(int(start_position[0]) + 1) + str(int(start_position[1]) - 2)))
+
     elif chess_piece.type == "rook":
         horizontal_or_vertical = 0
         neg_pos = 1
@@ -760,8 +781,9 @@ def play_vs_bot(my_path, term):
 
     whose_turn = 1
 
+    my_board.show_board(term)
+
     while True:
-        my_board.show_board(term)
 
         if whose_turn == 1:
             print("\nIt is player " + str(whose_turn) + "'s turn")
@@ -792,7 +814,12 @@ def play_vs_bot(my_path, term):
 
         move_history.append(input_move)
 
+        my_board.show_board(term, moving_piece=my_board.board_array[int(parsed_moves[0][0])][int(parsed_moves[0][1])], option="show_move",\
+        valid_moves=find_valid_moves(my_board.board_array[int(parsed_moves[0][0])][int(parsed_moves[0][1])], my_board, my_board.board_array[int(parsed_moves[0][0])][int(parsed_moves[0][1])].location))
+
         my_board.move_piece(parsed_moves[0], parsed_moves[1], whose_turn)
+
+        my_board.show_board(term)
 
         # update whose turn it is
         if whose_turn == 1:
