@@ -1,0 +1,7 @@
+# run on all hosts
+- hosts: all
+  tasks:
+
+  - name: test game outcome
+    ansible.builtin.git:
+      script: ~/danielb-project0/test_player1_win.sh

@@ -2,6 +2,7 @@ from blessed import Terminal
 from pathlib import Path
 import json
 import random
+import sys
 
 import blessed
 
@@ -835,7 +836,6 @@ def main():
     # blessed terminal
     term = Terminal()
     my_board = Board()
-    my_board.show_board(term)
 
     my_path = Path.home() / "danielb-project0"
 
@@ -844,9 +844,27 @@ def main():
 
     whose_turn = 1
 
-
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "test":
+            with open(my_path / sys.argv[2]) as infile:
+                save_dictionary = json.load(infile)
+            move_history = save_dictionary["moveHistory"]
+            for i in move_history:
+                parsed_moves = parse_move(i)
+                found_moves = find_valid_moves(my_board.board_array[int(parsed_moves[0][0])][int(parsed_moves[0][1])], my_board, parsed_moves[0])
+                for x in found_moves:
+                    print(x.move)
+                my_board.move_piece(parsed_moves[0], parsed_moves[1], whose_turn)
+                # update whose turn it is
+                if whose_turn == 1:
+                    whose_turn = 2
+                else:
+                    whose_turn = 1
+            sys.exit(1)
 
     easy_bot(my_board, 2)
+
+    my_board.show_board(term)
 
     print("Welcome to Chess\n")
     option = input("Enter 1 to start new game, Enter 2 to load a saved game\n")
