@@ -11,5 +11,5 @@
     pip:
       requirements: ~/danielb-project0/requirements.txt
       virtualenv: ~/venv
-      #virtualenv_command: /usr/bin/python3 -m venv venv
-      virtualenv_python: python3.6.9
+      virtualenv_command: /usr/bin/python3 -m venv venv
+      #virtualenv_python: python3.6.9
