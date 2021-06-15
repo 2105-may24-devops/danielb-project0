@@ -28,5 +28,5 @@ steps:
   displayName: 'Install dependencies'
 
 - script: |
-    bash ./test_player1_win
+    bash ./test_player1_win.sh
   displayName: 'Run tests'
