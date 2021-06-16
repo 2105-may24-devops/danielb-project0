@@ -51,4 +51,12 @@ steps:
     playbookPathOnAgentMachine: './ansible/ensure_latest.yml'
     inventoriesAgentMachine: 'file'
     inventoryFileOnAgentMachine: './ansible/inventory'
-  displayName: 'Ansible- check installs'
+  displayName: 'Ansible ensure latest'
+
+- task: Ansible@0
+  inputs:
+    ansibleInterface: 'agentMachine'
+    playbookPathOnAgentMachine: './ansible/setup_chess.yml'
+    inventoriesAgentMachine: 'file'
+    inventoryFileOnAgentMachine: './ansible/inventory'
+  displayName: 'Ansible setup chess'
