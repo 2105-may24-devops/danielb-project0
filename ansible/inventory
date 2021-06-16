@@ -1,2 +1,6 @@
-13.84.166.27 ansible_ssh_private_key_file=~/.ssh/2105-may24-devops-ubuntu-vm-1_key.pem ansible_user=danielb
-13.66.8.112 ansible_ssh_private_key_file=~/.ssh/2105-may24-devops-ubuntu-vm-1_key.pem ansible_user=danielb
+[py3_hosts]
+vm4 ansible_host=13.84.166.27 ansible_ssh_private_key_file=~/.ssh/2105-may24-devops-ubuntu-vm-1_key.pem ansible_user=danielb
+vm5 ansible_host=13.66.8.112 ansible_ssh_private_key_file=~/.ssh/2105-may24-devops-ubuntu-vm-1_key.pem ansible_user=danielb
+
+[py3_hosts:vars]
+ansible_python_interpreter=/usr/bin/python3
