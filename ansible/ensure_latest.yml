@@ -1,12 +1,6 @@
 # run on all hosts
 - hosts: all
   tasks:
-  
-  - name: apt update
-    become: true
-    apt:
-      update_cache: 'yes'
-      upgrade: 'yes'
 
   - name: install python3
     package:
