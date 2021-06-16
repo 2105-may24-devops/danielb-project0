@@ -19,6 +19,12 @@ steps:
     versionSpec: '$(python.version)'
   displayName: 'Use Python $(python.version)'
 
+- script: |
+    python -m pip install --upgrade pip
+    python -m venv venv
+    venv/bin/python -m pip install -r requirements.txt
+  displayName: 'Install dependencies'
+
 - task: InstallSSHKey@0
   inputs:
     knownHostsEntry: |
@@ -42,7 +48,7 @@ steps:
 - task: Ansible@0
   inputs:
     ansibleInterface: 'agentMachine'
-    playbookPathOnAgentMachine: '~/ansible/ensure_latest.yml'
+    playbookPathOnAgentMachine: './ansible/ensure_latest.yml'
     inventoriesAgentMachine: 'file'
     inventoryFileOnAgentMachine: './ansible/inventory'
   displayName: 'Ansible- check installs'
