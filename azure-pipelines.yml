@@ -25,6 +25,8 @@ steps:
     venv/bin/python -m pip install -r requirements.txt
   displayName: 'Install dependencies'
 
+
+
 # in azure devops, instead of having to type usernames and password
 # in this file, you create (in the GUI) an objct called
 # "service connection" to encapsulate those credentials separate from
@@ -33,7 +35,7 @@ steps:
 
 - task: SonarCloudPrepare@1
   inputs:
-    SonarCloud: 'sonarcloud-Daniel-Blankenship'
+    SonarCloud: 'SonarCloudDanielBlankenshipP0'
     organization: '2105-may24-devops'
     scannerMode: 'CLI'
     configMode: 'manual'
