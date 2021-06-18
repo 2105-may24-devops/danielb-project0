@@ -25,6 +25,38 @@ steps:
     venv/bin/python -m pip install -r requirements.txt
   displayName: 'Install dependencies'
 
+# in azure devops, instead of having to type usernames and password
+# in this file, you create (in the GUI) an objct called
+# "service connection" to encapsulate those credentials separate from
+# any one pipeline. then in the pipeline, you refer to the service
+# connection by name in tasks that will use them.
+
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'sonarcloud-Daniel-Blankenship'
+    organization: '2105-may24-devops'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: '2105-may24-devops_danielb-project0'
+    cliSources: '.'
+
+- task: SonarCloudAnalyze@1
+
+# publishing the "quality gate" result to the build run in azure pipelines
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
+
+# MSYS_NO_PATHCONV=1 docker run \
+#     --rm \
+#     -e SONAR_HOST_URL="https://sonarcloud.io" \
+#     -e SONAR_LOGIN="myToken" \
+#     -v "$(pwd):/usr/src" \
+#     sonarsource/sonar-scanner-cli \
+#     -Dsonar.projectKey="2105-may24-devops_danielb-project0" \
+#     -Dsonar.organization="2105-may24-devops"
+
+
 - task: InstallSSHKey@0
   inputs:
     knownHostsEntry: |
